@@ -75,12 +75,12 @@ export class InfoController {
   async updateUserInfo(@Body() userDto: UserDto, @Req() req: Request, @Res() res: Response) {
     try {
       userDto.userId = req.user['id'];
-
+      
       //닉네임 중복확인
-      const checkId = await this.userService.checkId(userDto.userNickname);
-      console.log('controller 중복확인 ', checkId);
-      if (checkId) return res.status(400).json({ message: '아이디 중복' });
-
+      // const checkId = await this.userService.checkId(userDto.userNickname);
+      // console.log('controller 중복확인 ', checkId);
+      // if (checkId) return res.status(400).json({ message: '아이디 중복' });
+      
       //정보 수정
       await this.userService.updateUser(userDto);
 
