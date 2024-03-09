@@ -1,6 +1,7 @@
-import { ForbiddenException, Injectable, NotFoundException, UploadedFile } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException, UploadedFile, Sse, MessageEvent } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma/prisma.service';
 import { NotiDto } from './dto/noti.dto';
+import { interval, map, Observable } from 'rxjs';
 
 @Injectable()
 export class NotiService {
@@ -56,46 +57,55 @@ export class NotiService {
   /**
    * 신청 여부 확인
    * @param notiDto
-   * @returns 
+   * @returns
    */
-  async checkNoti(notiDto : NotiDto){
+  async checkNoti(notiDto: NotiDto) {
     try {
       const noti = await this.prisma.notifications.findFirst({
-        where:{
-          postId:notiDto.postId,
-          noti_userId:notiDto.noti_userId
+        where: {
+          postId: notiDto.postId,
+          noti_userId: notiDto.noti_userId,
         },
-        select:{
-          notiId:true
-        }
-      })
+        select: {
+          notiId: true,
+        },
+      });
 
-      return noti
+      return noti;
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
   /**
    * 신청 수정
    * @param body
-   * @param postId 
-   * @returns 
+   * @param postId
+   * @returns
    */
-  async updateNoti(body : any,postId :number){
+  async updateNoti(body: any, postId: number) {
     try {
       const result = await this.prisma.notifications.update({
-        where:{
-          notiId:Number(body.notiId),
+        where: {
+          notiId: Number(body.notiId),
         },
-        data:{
-          notiStatus:body.notiStatus
-        }
-      })
+        data: {
+          notiStatus: body.notiStatus,
+        },
+      });
 
-      return result
+      return result;
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
+  }
+
+  sse(): Observable<MessageEvent> {
+    console.log(`sse 테스트`);
+
+    return new Observable((observer) => {
+      observer.next({ data: 'New notification' }); // 최초 1회 메시지를 보냅니다.
+      observer.complete(); // Observable을 종료합니다.
+    });
   }
 }

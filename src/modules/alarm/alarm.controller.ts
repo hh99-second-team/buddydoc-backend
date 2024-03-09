@@ -12,6 +12,8 @@ import {
   HttpException,
   Next,
   UseGuards,
+  Sse,
+  MessageEvent,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
@@ -25,9 +27,9 @@ export class AlarmController {
 
   /**
    * 내 알림 조회
-   * @param res 
-   * @param req 
-   * @returns 
+   * @param res
+   * @param req
+   * @returns
    */
   @ApiOperation({
     summary: '내 알림 조회 API',
@@ -37,7 +39,7 @@ export class AlarmController {
   @Get('/alarms')
   async getAlarm(@Res() res: Response) {
     try {
-      const result = await this.alarmService.getAlarm()
+      const result = await this.alarmService.getAlarm();
       return res.status(200).json({ result });
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
