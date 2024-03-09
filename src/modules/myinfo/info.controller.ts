@@ -86,6 +86,12 @@ export class InfoController {
     }
   }
 
+  /**
+   * 신청상태 변경
+   * @param res 
+   * @param req 
+   * @returns 
+   */
   @UseGuards(JwtAuthGuard)
   @Post('/my-posts/:postId')
   async myinfoNoti(@Res() res: Response, @Req() req: Request) {
